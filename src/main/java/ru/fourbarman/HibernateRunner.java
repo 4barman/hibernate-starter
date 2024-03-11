@@ -1,6 +1,7 @@
 package ru.fourbarman;
 
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -19,6 +20,9 @@ public class HibernateRunner {
 
         //OR without autoApply:true here - set @Converter(autoApply = true) on Converter Class and then:
         configuration.addAttributeConverter(new BirthdayConverter());
+
+        //add JsonBinaryType type converter
+        configuration.registerTypeOverride(new JsonBinaryType());
         configuration.configure();
 
         try (SessionFactory sessionFactory = configuration.buildSessionFactory();
@@ -26,9 +30,15 @@ public class HibernateRunner {
             session.beginTransaction();
 
             User user = User.builder()
-                    .username("ivan5@gmail.com")
+                    .username("ivan6@gmail.com")
                     .firstname("Ivan")
                     .lastname("Ivanov")
+                    .info("""
+                            {
+                            "name": "Ivan",
+                            "id": 25
+                            }
+                            """)
                     .role(Role.ADMIN)
                     .birthDate(new Birthday(LocalDate.of(2000, 1, 1)))
                     .build();

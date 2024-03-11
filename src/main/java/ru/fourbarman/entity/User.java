@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import ru.fourbarman.converter.BirthdayConverter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +23,10 @@ public class User {
     @Column(name = "birth_date")
     //@Convert(converter = BirthdayConverter.class)
     private Birthday birthDate;
+
+    @Type(type = "jsonb")
+    private String info;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 }
