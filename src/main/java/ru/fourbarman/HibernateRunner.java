@@ -48,6 +48,19 @@ public class HibernateRunner {
 //            session.delete(user);
             User u = session.get(User.class, "ivan10@gmail.com");
 
+            //
+            u.setLastname("Renamed");
+            //session can be flushed to db
+            //session.flush();
+
+            //can detect session is dirty - entity was edited while session is open
+            //System.out.println(session.isDirty());
+
+            //how to clear session
+//            session.evict(u);
+//            session.clear();
+//            session.close();
+
             session.getTransaction().commit();
         }
     }
