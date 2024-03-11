@@ -5,4 +5,7 @@ CREATE TABLE users
     lastname   VARCHAR(128),
     birth_date DATE,
     age        INT
-)
+);
+
+ALTER TABLE users
+ADD COLUMN role VARCHAR(32);

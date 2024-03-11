@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 
 class HibernateRunnerTest {
 
+    /**
+     * How Hibernate builds query in example?
+     */
     @Test
     void checkReflectionApi() {
         User user = User.builder()
@@ -28,25 +31,30 @@ class HibernateRunnerTest {
                 %s
                 (%s)
                 values
-                ($s)
+                (%s)
                 """;
+
+        //retrieve table name from entity
         String tableName = Optional.ofNullable(user.getClass().getAnnotation(Table.class))
-                .map(tableAnnotation -> tableAnnotation.schema() + tableAnnotation.name())
+                .map(tableAnnotation -> tableAnnotation.schema() + "." + tableAnnotation.name())
                 .orElse(user.getClass().getName());
 
+        //retrieve entity field names
         Field[] declaredFields = user.getClass().getDeclaredFields();
+
+        //retrieve column names from entity field names
         String columnNames = Arrays.stream(declaredFields)
                 .map(field -> Optional.ofNullable(field.getAnnotation(Column.class))
                         .map(Column::name)
                         .orElse(field.getName()))
                 .collect(Collectors.joining(", "));
 
+        //retrieve column values
         String columnValues = Arrays.stream(declaredFields)
                 .map(field -> "?")
                 .collect(Collectors.joining(", "));
 
-        System.out.println(tableName + columnNames + columnValues);
-
+        System.out.println(sql.formatted(tableName, columnNames, columnValues));
     }
 
 }

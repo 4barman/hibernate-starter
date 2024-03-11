@@ -4,6 +4,7 @@ package ru.fourbarman;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import ru.fourbarman.entity.Role;
 import ru.fourbarman.entity.User;
 
 import java.time.LocalDate;
@@ -18,9 +19,10 @@ public class HibernateRunner {
             session.beginTransaction();
 
             User user = User.builder()
-                    .username("ivan@gmail.com")
+                    .username("ivan1@gmail.com")
                     .firstname("Ivan")
                     .lastname("Ivanov")
+                    .role(Role.ADMIN)
                     .birthDate(LocalDate.of(2000, 1, 1))
                     .age(20)
                     .build();
