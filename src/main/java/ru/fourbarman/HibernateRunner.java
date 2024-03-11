@@ -30,7 +30,7 @@ public class HibernateRunner {
             session.beginTransaction();
 
             User user = User.builder()
-                    .username("ivan6@gmail.com")
+                    .username("ivan11@gmail.com")
                     .firstname("Ivan")
                     .lastname("Ivanov")
                     .info("""
@@ -42,7 +42,11 @@ public class HibernateRunner {
                     .role(Role.ADMIN)
                     .birthDate(new Birthday(LocalDate.of(2000, 1, 1)))
                     .build();
-            session.save(user);
+            //session.save(user);
+//            session.update(user); will throw exception if not found!
+//            session.saveOrUpdate(user);
+//            session.delete(user);
+            User u = session.get(User.class, "ivan10@gmail.com");
 
             session.getTransaction().commit();
         }
