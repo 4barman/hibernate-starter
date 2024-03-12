@@ -1,16 +1,17 @@
 package ru.fourbarman;
 
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
-import org.hibernate.cfg.Configuration;
-import ru.fourbarman.converter.BirthdayConverter;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.fourbarman.entity.User;
 import ru.fourbarman.util.HibernateUtil;
 
 public class HibernateRunner {
+    private static final Logger log = LoggerFactory.getLogger(HibernateRunner.class);
+
     public static void main(String[] args) {
 
         User user = User.builder()
@@ -18,28 +19,22 @@ public class HibernateRunner {
                 .lastname("Ivanov")
                 .firstname("Ivan")
                 .build();
-
+        log.info("User entity is in Transient state: {}", user);
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
-             try (Session session1 = sessionFactory.openSession()) {
-                session1.beginTransaction();
+            Session session1 = sessionFactory.openSession();
+            try (session1) {
+                Transaction transaction = session1.beginTransaction();
+                log.info("Transaction is created: {}", transaction);
 
                 session1.saveOrUpdate(user);
+                log.trace("User is in Persistent state: {}, session: {}", user, session1);
 
                 session1.getTransaction().commit();
             }
-            try (Session session2 = sessionFactory.openSession()) {
-                session2.beginTransaction();
-
-                user.setFirstname("Sveta");
-                //session2.delete(user);
-
-                //refresh/merge
-                //session2.refresh(user); //refresh user from db
-
-                Object mergedUser = session2.merge(user); //merge user to db
-
-                session2.getTransaction().commit();
-            }
+            log.warn("User is in Detached state: {}, session is closed: {}", user, session1);
+        } catch (Exception e) {
+            log.error("Exception occurred", e);
+            throw e;
         }
     }
 }
