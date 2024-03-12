@@ -19,8 +19,14 @@ import javax.persistence.*;
 @TypeDef(name = "json", typeClass = JsonBinaryType.class)
 @Table(name = "users", schema = "public")
 public class User {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String username;
+
     @Embedded
     private PersonalInfo personalInfo;
 
