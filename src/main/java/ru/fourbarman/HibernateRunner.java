@@ -5,9 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import ru.fourbarman.entity.Birthday;
 import ru.fourbarman.entity.PersonalInfo;
 import ru.fourbarman.entity.User;
 import ru.fourbarman.util.HibernateUtil;
+
+import java.time.LocalDate;
 
 @Slf4j
 public class HibernateRunner {
@@ -20,6 +23,7 @@ public class HibernateRunner {
                         PersonalInfo.builder()
                                 .lastname("Petr")
                                 .firstname("Petrov")
+                                .birthday(new Birthday(LocalDate.of(1800, 1, 1)))
                                 .build()
                 )
                 .build();
@@ -36,6 +40,17 @@ public class HibernateRunner {
                 session1.getTransaction().commit();
             }
             log.warn("User is in Detached state: {}, session is closed: {}", user, session1);
+            try (Session session = sessionFactory.openSession()) {
+
+                PersonalInfo key = PersonalInfo.builder()
+                        .lastname("Petr")
+                        .firstname("Petrov")
+                        .birthday(new Birthday(LocalDate.of(1800, 1, 1)))
+                        .build();
+
+                User user1 = session.get(User.class, key);
+                System.out.println();
+            }
         } catch (Exception e) {
             log.error("Exception occurred", e);
             throw e;

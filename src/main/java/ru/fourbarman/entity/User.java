@@ -20,15 +20,11 @@ import javax.persistence.*;
 @Table(name = "users", schema = "public")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private PersonalInfo personalInfo;
 
     @Column(unique = true)
     private String username;
-
-    @Embedded
-    private PersonalInfo personalInfo;
 
     @Type(type = "json")
     private String info;
