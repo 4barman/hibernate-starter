@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import ru.fourbarman.entity.PersonalInfo;
 import ru.fourbarman.entity.User;
 import ru.fourbarman.util.HibernateUtil;
 
@@ -14,9 +15,13 @@ public class HibernateRunner {
     public static void main(String[] args) {
 
         User user = User.builder()
-                .username("ivan@gamil.com")
-                .lastname("Ivanov")
-                .firstname("Ivan")
+                .username("petr@gamil.com")
+                .personalInfo(
+                        PersonalInfo.builder()
+                                .lastname("Petr")
+                                .firstname("Petrov")
+                                .build()
+                )
                 .build();
         log.info("User entity is in Transient state: {}", user);
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {

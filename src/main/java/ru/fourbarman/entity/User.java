@@ -21,11 +21,8 @@ import javax.persistence.*;
 public class User {
     @Id
     private String username;
-    private String firstname;
-    private String lastname;
-    @Column(name = "birth_date")
-    //@Convert(converter = BirthdayConverter.class)
-    private Birthday birthDate;
+    @Embedded
+    private PersonalInfo personalInfo;
 
     @Type(type = "json")
     private String info;
